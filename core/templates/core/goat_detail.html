@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+{% block title %}{{ goat.name }} — Simalthali Agro Pvt. Ltd.{% endblock %}
+{% block content %}
+<section class="container section narrow">
+    <a href="{% url 'goat_list' %}" class="back-link">&larr; Back to all goats</a>
+    <div class="detail-layout">
+        {% if goat.photo %}
+            <img src="{{ goat.photo.url }}" alt="{{ goat.name }}" class="detail-img">
+        {% endif %}
+        <div>
+            <h1>{{ goat.name }}</h1>
+            <p class="muted">{{ goat.breed.name|default:"Mixed breed" }} · {{ goat.get_sex_display }}</p>
+            {% if goat.date_of_birth %}<p class="muted">Born {{ goat.date_of_birth|date:"M d, Y" }}</p>{% endif %}
+            {% if goat.is_available_for_sale %}<span class="badge">Available for sale</span>{% endif %}
+            {% if goat.description %}<p>{{ goat.description|linebreaks }}</p>{% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

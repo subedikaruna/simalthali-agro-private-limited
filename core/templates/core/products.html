@@ -1,0 +1,28 @@
+{% extends "core/base.html" %}
+{% block title %}Products — Simalthali Agro Pvt. Ltd.{% endblock %}
+{% block content %}
+<section class="container section">
+    <h1>Our Products</h1>
+    {% if products %}
+    <div class="card-grid">
+        {% for product in products %}
+        <div class="card no-hover">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <div class="card-img-placeholder">🧀</div>
+            {% endif %}
+            <div class="card-body">
+                <h3>{{ product.name }}</h3>
+                <p class="muted">{{ product.get_category_display }}</p>
+                {% if product.price %}<p class="price">Rs. {{ product.price }} {% if product.unit %}/ {{ product.unit }}{% endif %}</p>{% endif %}
+                {% if product.description %}<p>{{ product.description }}</p>{% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="muted">No products added yet — add some from the admin panel at /admin/.</p>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "core/base.html" %}
+{% block title %}Blog — Simalthali Agro Pvt. Ltd.{% endblock %}
+{% block content %}
+<section class="container section narrow">
+    <h1>Farm Blog</h1>
+    {% if posts %}
+        {% for post in posts %}
+        <article class="blog-preview">
+            <h2><a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a></h2>
+            <p class="muted">{{ post.published_date|date:"M d, Y" }}</p>
+            <p>{{ post.content|truncatewords:35 }}</p>
+        </article>
+        {% endfor %}
+    {% else %}
+    <p class="muted">No posts yet — add one from the admin panel at /admin/.</p>
+    {% endif %}
+</section>
+{% endblock %}

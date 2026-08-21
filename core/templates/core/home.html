@@ -1,0 +1,55 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Simalthali Agro Pvt. Ltd. — Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-inner">
+        <h1>Raised with care, in the heart of the hills.</h1>
+        <p>Ethically raised goats, fresh milk, and quality breeding stock — straight from our family farm to you.</p>
+        <a href="{% url 'product_list' %}" class="btn btn-primary">See our products</a>
+        <a href="{% url 'goat_list' %}" class="btn btn-outline">Meet the herd</a>
+    </div>
+</section>
+
+{% if featured_goats %}
+<section class="container section">
+    <h2>Meet a few of our goats</h2>
+    <div class="card-grid">
+        {% for goat in featured_goats %}
+        <a href="{% url 'goat_detail' goat.pk %}" class="card">
+            {% if goat.photo %}
+                <img src="{{ goat.photo.url }}" alt="{{ goat.name }}">
+            {% else %}
+                <div class="card-img-placeholder">🐐</div>
+            {% endif %}
+            <div class="card-body">
+                <h3>{{ goat.name }}</h3>
+                <p class="muted">{{ goat.breed.name|default:"Mixed breed" }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if latest_posts %}
+<section class="container section">
+    <h2>Latest from the farm</h2>
+    <div class="card-grid">
+        {% for post in latest_posts %}
+        <a href="{% url 'blog_detail' post.slug %}" class="card">
+            {% if post.cover_image %}
+                <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h3>{{ post.title }}</h3>
+                <p class="muted">{{ post.published_date|date:"M d, Y" }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Simalthali Agro Pvt. Ltd.{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="{% url 'home' %}" class="logo">🐐 Simalthali Agro Pvt. Ltd.</a>
+            <nav class="nav">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'about' %}">About</a>
+                <a href="{% url 'goat_list' %}">Our Goats</a>
+                <a href="{% url 'product_list' %}">Products</a>
+                <a href="{% url 'blog_list' %}">Blog</a>
+                <a href="{% url 'contact' %}" class="nav-cta">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    {% if messages %}
+        <div class="container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; {% now "Y" %} Simalthali Agro Pvt. Ltd.. Raised in the hills, delivered with care.</p>
+            <p class="footer-links">
+                <a href="{% url 'contact' %}">Get in touch</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

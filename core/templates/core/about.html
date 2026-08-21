@@ -1,0 +1,11 @@
+{% extends "core/base.html" %}
+{% block title %}{{ about.title }} — Simalthali Agro Pvt. Ltd.{% endblock %}
+{% block content %}
+<section class="container section narrow">
+    <h1>{{ about.title }}</h1>
+    {% if about.photo %}
+        <img src="{{ about.photo.url }}" alt="{{ about.title }}" class="detail-img-full">
+    {% endif %}
+    <div class="blog-content">{{ about.story|linebreaks }}</div>
+</section>
+{% endblock %}
