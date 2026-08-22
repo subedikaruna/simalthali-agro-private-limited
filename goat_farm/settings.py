@@ -130,27 +130,65 @@ USE_TZ = True
 
 # ---------------------------------------------------------------------------
 # Static files — served efficiently in production by WhiteNoise.
-# ---------------------------------------------------------------------------
-STATIC_URL = "static/"
+# # ---------------------------------------------------------------------------
+# STATIC_URL = "static/"
+# STATICFILES_DIRS = [BASE_DIR / "core" / "static"]
+# STATIC_ROOT = BASE_DIR / "staticfiles"
+# STORAGES = {
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+# }
+
+# # ---------------------------------------------------------------------------
+# # Media files (goat photos, product images, etc.) — local disk in
+# # development, Cloudinary in production (set CLOUDINARY_URL to enable).
+# # Without this, uploaded photos would be permanently lost every time
+# # Render restarts or redeploys the app, since its free disk is temporary.
+# # ---------------------------------------------------------------------------
+# MEDIA_URL = "media/"
+# MEDIA_ROOT = BASE_DIR / "media"
+
+# if os.environ.get("CLOUDINARY_URL"):
+#     STORAGES["default"] = {"BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"}
+
+
+
+
+
+
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "core" / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
 
-# ---------------------------------------------------------------------------
-# Media files (goat photos, product images, etc.) — local disk in
-# development, Cloudinary in production (set CLOUDINARY_URL to enable).
-# Without this, uploaded photos would be permanently lost every time
-# Render restarts or redeploys the app, since its free disk is temporary.
-# ---------------------------------------------------------------------------
-MEDIA_URL = "media/"
+MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 if os.environ.get("CLOUDINARY_URL"):
-    STORAGES["default"] = {"BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"}
+    STORAGES["default"] = {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 # ---------------------------------------------------------------------------
 # Production security hardening — only applied when DEBUG is False.
