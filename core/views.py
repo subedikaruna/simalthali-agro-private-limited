@@ -1,15 +1,19 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from .models import AboutPage, Goat, Product, BlogPost
+from .models import HomePage, GalleryItem, AboutPage, Goat, Product, BlogPost
 from .forms import ContactForm
 
 
 def home(request):
+    home_page = HomePage.load()
     featured_goats = Goat.objects.filter(is_featured=True)[:4]
     latest_posts = BlogPost.objects.filter(is_published=True)[:3]
+    gallery_items = GalleryItem.objects.filter(is_featured=True)[:8]
     return render(request, "core/home.html", {
+        "home_page": home_page,
         "featured_goats": featured_goats,
         "latest_posts": latest_posts,
+        "gallery_items": gallery_items,
     })
 
 
