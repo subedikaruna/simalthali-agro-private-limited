@@ -1,6 +1,106 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from urllib.parse import urlparse, parse_qs
+
+
+def youtube_embed_url(url):
+    """
+    Turn a normal YouTube link (youtu.be/xxx or youtube.com/watch?v=xxx) into
+    an embeddable URL. If it's already an embed link, or from another host
+    like Vimeo, it's returned as-is.
+    """
+    if not url:
+        return None
+    parsed = urlparse(url)
+    if "youtu.be" in parsed.netloc:
+        video_id = parsed.path.lstrip("/")
+        return f"https://www.youtube.com/embed/{video_id}"
+    if "youtube.com" in parsed.netloc:
+        if "/embed/" in parsed.path:
+            return url
+        video_id = parse_qs(parsed.query).get("v", [None])[0]
+        if video_id:
+            return f"https://www.youtube.com/embed/{video_id}"
+    return url
+
+
+class HomePage(models.Model):
+    """
+    Singleton model for the homepage's hero section.
+    There will only ever be one row (pk=1) — edit it from the admin panel.
+
+    You can set EITHER a hero image OR a hero video link (not both needed) —
+    if a video link is filled in, it takes priority over the image.
+    """
+
+    hero_heading = models.CharField(
+        max_length=200, default="Raised with care, in the heart of the hills."
+    )
+    hero_subheading = models.TextField(
+        default="Ethically raised goats, fresh milk, and quality breeding stock — straight from our family farm to you."
+    )
+    hero_image = models.ImageField(
+        upload_to="homepage/", blank=True, null=True,
+        help_text="Shown as the hero background if no video link is set below.",
+    )
+    hero_video_url = models.URLField(
+        blank=True,
+        help_text="Optional. Paste a YouTube link (any format) to show a video instead of the image — it embeds automatically.",
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Home Page"
+        verbose_name_plural = "Home Page"
+
+    def __str__(self):
+        return "Home Page"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    @classmethod
+    def load(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+    @property
+    def hero_embed_url(self):
+        return youtube_embed_url(self.hero_video_url)
+
+
+class GalleryItem(models.Model):
+    """
+    A single photo or video for the homepage's 'From the Farm' gallery.
+    Set either an image OR a video link, not both — video takes priority
+    if both happen to be filled in.
+    """
+
+    caption = models.CharField(max_length=150, blank=True)
+    image = models.ImageField(upload_to="gallery/", blank=True, null=True)
+    video_url = models.URLField(
+        blank=True, help_text="Optional. A YouTube link — embeds automatically."
+    )
+    order = models.PositiveIntegerField(
+        default=0, help_text="Lower numbers show first."
+    )
+    is_featured = models.BooleanField(default=True, help_text="Show on the homepage.")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["order", "-created_at"]
+
+    def __str__(self):
+        return self.caption or f"Gallery item #{self.pk}"
+
+    @property
+    def embed_url(self):
+        return youtube_embed_url(self.video_url)
 
 
 class AboutPage(models.Model):
@@ -10,7 +110,7 @@ class AboutPage(models.Model):
     instead of touching the about.html template directly.
     """
 
-    title = models.CharField(max_length=200, default="About Simalthali Agro Pvt. Ltd.")
+    title = models.CharField(max_length=200, default="About Himal Goat Farm")
     story = models.TextField(
         help_text="Tell your farm's story — how it started, your values, what makes it special."
     )
@@ -39,7 +139,7 @@ class AboutPage(models.Model):
         obj, _ = cls.objects.get_or_create(
             pk=1,
             defaults={
-                "title": "About Simalthali Agro Pvt. Ltd.",
+                "title": "About Himal Goat Farm",
                 "story": "Tell your farm's story here — edit this from the admin panel.",
             },
         )
@@ -135,7 +235,6 @@ class BlogPost(models.Model):
     content = models.TextField()
     is_published = models.BooleanField(default=True)
     published_date = models.DateTimeField(auto_now_add=True)
-    
 
     class Meta:
         ordering = ["-published_date"]

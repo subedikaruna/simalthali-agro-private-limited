@@ -1,7 +1,40 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.shortcuts import redirect
-from .models import AboutPage, Breed, Goat, Product, BlogPost, ContactMessage
+from django.utils.html import format_html
+from .models import HomePage, GalleryItem, AboutPage, Breed, Goat, Product, BlogPost, ContactMessage
+
+
+@admin.register(HomePage)
+class HomePageAdmin(admin.ModelAdmin):
+    """Singleton admin, same pattern as AboutPage — only ever one row."""
+
+    list_display = ("hero_heading", "updated_at")
+
+    def has_add_permission(self, request):
+        return not HomePage.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        home = HomePage.load()
+        return redirect(reverse("admin:core_homepage_change", args=[home.pk]))
+
+
+@admin.register(GalleryItem)
+class GalleryItemAdmin(admin.ModelAdmin):
+    list_display = ("thumbnail", "caption", "order", "is_featured")
+    list_editable = ("order", "is_featured")
+    search_fields = ("caption",)
+
+    def thumbnail(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="height:44px; border-radius:4px;">', obj.image.url)
+        if obj.video_url:
+            return "🎬 Video"
+        return "—"
+    thumbnail.short_description = "Preview"
 
 
 @admin.register(AboutPage)

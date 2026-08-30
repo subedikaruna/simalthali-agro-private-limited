@@ -1,13 +1,20 @@
 {% extends "core/base.html" %}
 {% load static %}
 
-{% block title %}Simalthali Agro Pvt. Ltd. — Home{% endblock %}
+{% block title %}Himal Goat Farm — Home{% endblock %}
 
 {% block content %}
-<section class="hero">
+<section class="hero{% if home_page.hero_image and not home_page.hero_embed_url %} hero-with-image{% endif %}"
+    {% if home_page.hero_image and not home_page.hero_embed_url %}style="background-image: url('{{ home_page.hero_image.url }}');"{% endif %}>
+    {% if home_page.hero_embed_url %}
+    <div class="hero-video-wrap">
+        <iframe src="{{ home_page.hero_embed_url }}" title="Farm video" frameborder="0"
+            allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    {% endif %}
     <div class="container hero-inner">
-        <h1>Raised with care, in the heart of the hills.</h1>
-        <p>Ethically raised goats, fresh milk, and quality breeding stock — straight from our family farm to you.</p>
+        <h1>{{ home_page.hero_heading }}</h1>
+        <p>{{ home_page.hero_subheading }}</p>
         <a href="{% url 'product_list' %}" class="btn btn-primary">See our products</a>
         <a href="{% url 'goat_list' %}" class="btn btn-outline">Meet the herd</a>
     </div>
@@ -29,6 +36,27 @@
                 <p class="muted">{{ goat.breed.name|default:"Mixed breed" }}</p>
             </div>
         </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if gallery_items %}
+<section class="container section">
+    <h2>From the farm</h2>
+    <div class="gallery-grid">
+        {% for item in gallery_items %}
+        <div class="gallery-item">
+            {% if item.embed_url %}
+                <div class="gallery-video-wrap">
+                    <iframe src="{{ item.embed_url }}" title="{{ item.caption|default:'Farm video' }}"
+                        frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            {% elif item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.caption }}">
+            {% endif %}
+            {% if item.caption %}<p class="gallery-caption">{{ item.caption }}</p>{% endif %}
+        </div>
         {% endfor %}
     </div>
 </section>
