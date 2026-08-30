@@ -135,7 +135,7 @@ class BlogPost(models.Model):
     content = models.TextField()
     is_published = models.BooleanField(default=True)
     published_date = models.DateTimeField(auto_now_add=True)
-    category = models.CharField(max_length=50, blank=True)
+    
 
     class Meta:
         ordering = ["-published_date"]
