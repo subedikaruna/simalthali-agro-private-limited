@@ -158,7 +158,9 @@ USE_TZ = True
 
 
 STATIC_URL = "/static/"
+
 STATICFILES_DIRS = [BASE_DIR / "core" / "static"]
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STORAGES = {
@@ -177,8 +179,6 @@ if os.environ.get("CLOUDINARY_URL"):
     STORAGES["default"] = {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     }
-
-
 
 
 
