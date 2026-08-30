@@ -121,11 +121,13 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "core" / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
 # ---------------------------------------------------------------------------
 # Media files (goat photos, product images, etc.) — local disk in
 # development, Cloudinary in production (set CLOUDINARY_URL to enable).
