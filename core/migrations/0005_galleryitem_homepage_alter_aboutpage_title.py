@@ -43,6 +43,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='aboutpage',
             name='title',
-            field=models.CharField(default='About Himal Goat Farm', max_length=200),
+            field=models.CharField(default='About Simalthali Agro Pvt.Ltd.', max_length=200),
         ),
     ]

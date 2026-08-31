@@ -110,7 +110,7 @@ class AboutPage(models.Model):
     instead of touching the about.html template directly.
     """
 
-    title = models.CharField(max_length=200, default="About Himal Goat Farm")
+    title = models.CharField(max_length=200, default="About Simalthali Agro Pvt.Ltd.")
     story = models.TextField(
         help_text="Tell your farm's story — how it started, your values, what makes it special."
     )
@@ -139,7 +139,7 @@ class AboutPage(models.Model):
         obj, _ = cls.objects.get_or_create(
             pk=1,
             defaults={
-                "title": "About Himal Goat Farm",
+                "title": "About Simalthali Agro Pvt.Ltd.",
                 "story": "Tell your farm's story here — edit this from the admin panel.",
             },
         )
